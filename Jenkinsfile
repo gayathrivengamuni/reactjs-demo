@@ -78,7 +78,7 @@ ${sh(script: 'docker ps --format "{{.Names}}\\t{{.Ports}}" | awk -F "\\t" -v pub
         }
         failure {
             script {
-                emailext to: 'karthisk217@gmail.com',
+                emailext to: 'sravanaboyanagayathri@gmail.com',
                 subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS',
                 body: "The build #${BUILD_NUMBER} has failed. You can view the build log [here](${BUILD_URL}console)".toString(),
                 attachLog: true // Attach build log for failure email
