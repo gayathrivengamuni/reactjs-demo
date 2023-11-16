@@ -1,20 +1,66 @@
 pipeline {
-    agent any // run on any available agent
+    agent any
+
     stages {
-        stage('Install') { // install dependencies
+        stage('Print Environment Variables') {
             steps {
-                sh 'npm install' // run npm install command
+                script {
+                    echo "BRANCH_NAME: ${env.BRANCH_NAME}"
+                    echo "DOCKER_HUB_USERNAME: ${env.DOCKER_HUB_USERNAME}"
+                }
             }
         }
-        stage('Test') { // run tests
+
+        stage('Switching to Branch') {
             steps {
-                sh 'npm test' // run npm test command
+                script {
+                    def branch = env.BRANCH_NAME ?: 'master'
+                    echo "Switching to branch: ${branch}"
+
+                    git branch: branch,
+                        url: 'https://github.com/gayathrivengamamuni/reactjs-demo'
+                }
             }
         }
-        stage('Build') { // build the app
+
+        stage('Building & Pushing to DockerHub') {
             steps {
-                sh 'npm run build' // run npm run build command
+                script {
+                    def repoName = env.DOCKER_HUB_USERNAME ? "${env.DOCKER_HUB_USERNAME}/${env.BRANCH_NAME}" : 'sravanaboyanagayathri/capstone'
+
+                    sh 'chmod 777 build.sh'
+                    sh './build.sh'
+
+                    withCredentials([usernamePassword(credentialsId: 'docker', usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
+                        sh "docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD"
+                        sh "docker tag react-capstone-t $repoName"
+                        sh "docker push $repoName"
+                    }
+                }
             }
+        }
+
+        stage('Deploying to Application Server') {
+            agent {
+                label 'slave'
+            }
+            steps {
+                script {
+                    // Conditional deployment based on the branch
+                    if (env.BRANCH_NAME == 'master') {
+                        sh 'chmod 777 deploy.sh'
+                        sh './deploy.sh'
+                    } else {
+                        echo "Skipping deployment for branch ${env.BRANCH_NAME}"
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        failure {
+            mail to: 'your-email@example.com', subject: 'Pipeline Failed', body: "Pipeline failed on ${env.BRANCH_NAME} branch. Check Jenkins for details."
         }
     }
 }
