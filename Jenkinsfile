@@ -18,7 +18,7 @@ pipeline {
                     echo "Switching to branch: ${branch}"
 
                     git branch: branch,
-                        url: 'https://github.com/gayathrivengamuni/reactjs-demo'
+                        url: 'https://github.com/gayathrivengamuni/reactjs-demo.git'
                 }
             }
         }
