@@ -26,7 +26,7 @@ pipeline {
         stage('Building & Pushing to DockerHub') {
             steps {
                 script {
-                    def repoName = env.DOCKER_HUB_USERNAME ? "${env.DOCKER_HUB_USERNAME}/${env.BRANCH_NAME}" : 'sravanaboyanagayathri/capstone'
+                    def repoName = env.DOCKER_HUB_USERNAME ? "${env.DOCKER_HUB_USERNAME}/${env.BRANCH_NAME}" : 'sravanaboyanagayathri/dev'
 
                     sh 'chmod 777 build.sh'
                     sh './build.sh'
