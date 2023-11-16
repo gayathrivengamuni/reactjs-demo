@@ -60,7 +60,7 @@ pipeline {
 
     post {
         failure {
-            mail to: 'your-email@example.com', subject: 'Pipeline Failed', body: "Pipeline failed on ${env.BRANCH_NAME} branch. Check Jenkins for details."
+            mail to: 'sravanaboyanagayathri@gmail.com', subject: 'Pipeline Failed', body: "Pipeline failed on ${env.BRANCH_NAME} branch. Check Jenkins for details."
         }
     }
 }
