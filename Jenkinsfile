@@ -1,66 +1,64 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKER_IMAGE_NAME = 'sravanaboyanagaythri/dev-repo'
+    }
+
     stages {
-        stage('Print Environment Variables') {
+        stage('Checkout') {
             steps {
                 script {
-                    echo "BRANCH_NAME: ${env.BRANCH_NAME}"
-                    echo "DOCKER_HUB_USERNAME: ${env.DOCKER_HUB_USERNAME}"
+                    checkout scm
                 }
             }
         }
 
-        stage('Switching to Branch') {
+        stage('Build') {
             steps {
                 script {
-                    def branch = env.BRANCH_NAME ?: 'master'
-                    echo "Switching to branch: ${branch}"
-
-                    git branch: branch,
-                        url: 'https://github.com/gayathrivengamuni/reactjs-demo.git'
+                    sh 'bash build.sh'
                 }
             }
         }
 
-        stage('Building & Pushing to DockerHub') {
+        stage('Deploy to Dev') {
+            when {
+                branch 'dev'
+            }
             steps {
                 script {
-                    def repoName = env.DOCKER_HUB_USERNAME ? "${env.DOCKER_HUB_USERNAME}/${env.BRANCH_NAME}" : 'sravanaboyanagayathri/master'
-
-                    sh 'chmod 777 build.sh'
-                    sh './build.sh'
-
-                    withCredentials([usernamePassword(credentialsId: 'docker', usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
-                        sh "docker login -u $DOCKER_HUB_USERNAME -p $DOCKER_HUB_PASSWORD"
-                        sh "docker tag react-capstone-t $repoName"
-                        sh "docker push $repoName"
-                    }
+                    sh 'bash deploy.sh'
                 }
             }
         }
 
-        stage('Deploying to Application Server') {
-            agent {
-                label 'slave'
+        stage('Deploy to Prod') {
+            when {
+                branch 'master'
             }
             steps {
                 script {
-                    // Conditional deployment based on the branch
-                    if (env.BRANCH_NAME == 'master') {
-                        sh 'chmod 777 deploy.sh'
-                        sh './deploy.sh'
-                    } else {
-                        echo "Skipping deployment for branch ${env.BRANCH_NAME}"
-                    }
+                    // Tag the image for prod repository
+                    sh "docker tag $reactjs-demo $reactjs-demo:prod"
+                    
+                    // Login to Docker Hub (prod repo)
+                    sh "echo \"$DOCKER_PASSWORD\" | docker login -u \"$sravanaboyanagayathri\" --password-stdin"
+                    
+                    // Push the image to prod repository
+                    sh "docker push $reactjs-demo:prod"
                 }
             }
         }
     }
 
     post {
+        success {
+            echo 'Pipeline completed successfully!'
+        }
         failure {
-            mail to: 'sravanaboyanagayathri@gmail.com', subject: 'Pipeline Failed', body: "Pipeline failed on ${env.BRANCH_NAME} branch. Check Jenkins for details."
+            echo 'Pipeline failed!'
         }
     }
 }
+
