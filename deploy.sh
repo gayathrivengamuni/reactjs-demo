@@ -28,4 +28,7 @@ if [[ $GIT_BRANCH == "origin/dev" ]]; then
 
     # Push the image to the Dev Docker Hub repository
     docker push sravanaboyanagayathri/prod
+else
+    echo "Deployment error"
+fi
 
