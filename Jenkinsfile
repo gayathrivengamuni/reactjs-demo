@@ -8,7 +8,7 @@ pipeline {
             steps {
                 script {
                     sh 'chmod +x deploy.sh'  
-                    sh 'bash deploy.sh'
+                    sh './deploy.sh'
                 }
             }
         }
