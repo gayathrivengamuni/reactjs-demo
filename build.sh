@@ -1,1 +1,1 @@
-docker build -t reactjs-demo .
+docker build -t react-appimg .
