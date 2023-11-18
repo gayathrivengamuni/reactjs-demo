@@ -16,8 +16,7 @@ if [[ $GIT_BRANCH == "origin/dev" ]]; then
     # Push the image to the Dev Docker Hub repository
     docker push sravanaboyanagayathri/dev
   elif [[ $GIT_BRANCH == "origin/master" ]]; then
-         sh 'chmod +x build.sh' 
-         sh'./build.sh'
+     ./build.sh     
 
     # Log in to Docker Hub (replace with your actual Docker Hub credentials)
     docker login -u sravanaboyanagaythri -p dckr_pat_PiVQbOVkI-wXEPcDiMM8owlZZlM
