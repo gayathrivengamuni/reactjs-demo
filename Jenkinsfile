@@ -5,7 +5,7 @@ pipeline {
         DOCKER_IMAGE_NAME = 'sravanaboyanagaythri/dev-repo'
     }
 
-    stage
+    stages {
         stage('Build') {
             steps {
                 script {
