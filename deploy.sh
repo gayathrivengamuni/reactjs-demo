@@ -23,11 +23,11 @@ if [[ $GIT_BRANCH == "origin/dev" ]]; then
 
   
     # Tag the image
-    docker tag react-appimg sravanaboyanagayathri/reactimage
+    docker tag react-appimg sravanaboyanagayathri/prod
   
 
     # Push the image to the Dev Docker Hub repository
-    docker push sravanaboyanagayathri/reactimage
+    docker push sravanaboyanagayathri/prod
 else
     echo "Deployment error"
 fi
