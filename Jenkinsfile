@@ -20,7 +20,8 @@ pipeline {
                 branch 'dev'
             }
             steps {
-                script {
+                script {                 
+                    sh 'chmod +x build.sh'  
                     sh 'bash deploy.sh'
                 }
             }
