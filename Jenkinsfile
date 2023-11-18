@@ -5,18 +5,11 @@ pipeline {
         DOCKER_IMAGE_NAME = 'sravanaboyanagaythri/dev-repo'
     }
 
-    stages {
-        stage('Checkout') {
-            steps {
-                script {
-                    checkout scm
-                }
-            }
-        }
-
+    stage
         stage('Build') {
             steps {
                 script {
+                    sh 'chmod +x build.sh'  
                     sh 'bash build.sh'
                 }
             }
