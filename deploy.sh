@@ -6,7 +6,7 @@ if [[ $GIT_BRANCH == "origin/dev" ]]; then
      ./build.sh
 
     # Log in to Docker Hub (replace with your actual Docker Hub credentials)
-    docker login -u sravanaboyanagaythri -p $DOCKER_PASSWORD
+    docker login -u sravanaboyanagayathri -p $DOCKER_PASSWORD
 
   
     # Tag the image
@@ -19,7 +19,7 @@ if [[ $GIT_BRANCH == "origin/dev" ]]; then
         docker build -t react-appimg .
 
     # Log in to Docker Hub (replace with your actual Docker Hub credentials)
-    docker login -u sravanaboyanagaythri -p $DOCKER_PASSWORD
+    docker login -u sravanaboyanagayathri -p $DOCKER_PASSWORD
 
   
     # Tag the image
